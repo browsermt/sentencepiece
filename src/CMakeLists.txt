@@ -104,9 +104,12 @@ set(SPM_TEST_SRCS
   word_model_test.cc
   word_model_trainer_test.cc)
 
-find_package(Threads REQUIRED)
+set(SPM_LIBS ${PROTOBUF_LIBRARY})
 
-set(SPM_LIBS ${PROTOBUF_LIBRARY} Threads::Threads)
+if(NOT COMPILE_WASM)
+  find_package(Threads REQUIRED)
+  set(SPM_LIBS ${SPM_LIBS} Threads::Threads)
+endif(NOT COMPILE_WASM)
 
 if (SPM_ENABLE_NFKC_COMPILE)
   find_package(ICU 4.4 COMPONENTS i18n data uc REQUIRED)
