@@ -31,6 +31,8 @@ class NormalizerSpec;
 
 class SentencePieceTrainer {
  public:
+
+ #ifndef __EMSCRIPTEN__
   // Trains SentencePiece model with `trainer_spec`.
   // Default `normalizer_spec` is used.
   static util::Status Train(const TrainerSpec &trainer_spec);
@@ -44,6 +46,7 @@ class SentencePieceTrainer {
   // e.g.,
   // '--input=data --model_prefix=m --vocab_size=8192 model_type=unigram'
   static util::Status Train(util::min_string_view args);
+#endif
 
   // Handy function to make a normalizer spec from the pre-compiled
   // normalization name. Do not use this method in production as it crashes

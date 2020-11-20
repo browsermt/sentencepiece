@@ -30,6 +30,7 @@ namespace {
 static constexpr char kDefaultNormalizerName[] = "nmt_nfkc";
 }  // namespace
 
+ #ifndef __EMSCRIPTEN__
 // static
 util::Status SentencePieceTrainer::Train(const TrainerSpec &trainer_spec) {
   NormalizerSpec normalizer_spec;
@@ -44,6 +45,7 @@ util::Status SentencePieceTrainer::Train(
   auto trainer = TrainerFactory::Create(trainer_spec, copied_normalizer_spec);
   return trainer->Train();
 }
+#endif
 
 // static
 NormalizerSpec SentencePieceTrainer::GetNormalizerSpec(
@@ -180,6 +182,7 @@ util::Status SentencePieceTrainer::MergeSpecsFromArgs(
   return util::OkStatus();
 }
 
+ #ifndef __EMSCRIPTEN__
 // static
 util::Status SentencePieceTrainer::Train(util::min_string_view args) {
   LOG(INFO) << "Running command: " << args.data();
@@ -188,6 +191,7 @@ util::Status SentencePieceTrainer::Train(util::min_string_view args) {
   RETURN_IF_ERROR(MergeSpecsFromArgs(args, &trainer_spec, &normalizer_spec));
   return Train(trainer_spec, normalizer_spec);
 }
+#endif
 
 // static
 util::Status SentencePieceTrainer::PopulateNormalizerSpec(
