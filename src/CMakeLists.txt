@@ -106,10 +106,10 @@ set(SPM_TEST_SRCS
 
 set(SPM_LIBS ${PROTOBUF_LIBRARY})
 
-if(NOT COMPILE_WASM)
+if(NOT COMPILE_DECODER_ONLY)
   find_package(Threads REQUIRED)
   set(SPM_LIBS ${SPM_LIBS} Threads::Threads)
-endif(NOT COMPILE_WASM)
+endif(NOT COMPILE_DECODER_ONLY)
 
 if (SPM_ENABLE_NFKC_COMPILE)
   find_package(ICU 4.4 COMPONENTS i18n data uc REQUIRED)
@@ -139,12 +139,12 @@ if (SPM_ENABLE_SHARED)
 endif()
 
 add_library(sentencepiece-static STATIC ${SPM_SRCS})
-if(NOT COMPILE_WASM)
+if(NOT COMPILE_DECODER_ONLY)
   add_library(sentencepiece_train-static STATIC ${SPM_TRAIN_SRCS})
 endif()
 
 target_link_libraries(sentencepiece-static INTERFACE ${SPM_LIBS})
-if(NOT COMPILE_WASM)
+if(NOT COMPILE_DECODER_ONLY)
   target_link_libraries(sentencepiece_train-static INTERFACE sentencepiece-static ${SPM_LIBS})
 endif()
 
@@ -165,14 +165,14 @@ if (SPM_ENABLE_SHARED)
 else()
   add_library(sentencepiece ALIAS sentencepiece-static)
   set(SPM_INSTALLTARGETS sentencepiece-static)
-  if(NOT COMPILE_WASM)
+  if(NOT COMPILE_DECODER_ONLY)
     add_library(sentencepiece_train ALIAS sentencepiece_train-static)
     list(APPEND SPM_INSTALLTARGETS sentencepiece_train-static)
   endif()
 endif()
 
 set_target_properties(sentencepiece-static PROPERTIES OUTPUT_NAME "sentencepiece")
-if(NOT COMPILE_WASM)
+if(NOT COMPILE_DECODER_ONLY)
   set_target_properties(sentencepiece_train-static PROPERTIES OUTPUT_NAME "sentencepiece_train")
 endif()
 
@@ -199,7 +199,7 @@ if (NOT MSVC)
   endif()
 endif()
 
-if(NOT COMPILE_WASM)
+if(NOT COMPILE_DECODER_ONLY)
   add_executable(spm_encode spm_encode_main.cc)
   add_executable(spm_decode spm_decode_main.cc)
   add_executable(spm_normalize spm_normalize_main.cc)
@@ -218,7 +218,7 @@ if (SPM_ENABLE_NFKC_COMPILE)
   target_link_libraries(compile_charsmap sentencepiece sentencepiece_train)
 endif()
 
-if(NOT COMPILE_WASM)
+if(NOT COMPILE_DECODER_ONLY)
   list(APPEND SPM_INSTALLTARGETS
     spm_encode spm_decode spm_normalize spm_train spm_export_vocab)
 endif()

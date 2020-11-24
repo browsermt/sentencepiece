@@ -32,7 +32,7 @@ class NormalizerSpec;
 class SentencePieceTrainer {
  public:
 
- #ifndef __EMSCRIPTEN__
+#ifndef COMPILE_DECODER_ONLY
   // Trains SentencePiece model with `trainer_spec`.
   // Default `normalizer_spec` is used.
   static util::Status Train(const TrainerSpec &trainer_spec);

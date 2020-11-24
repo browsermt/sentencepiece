@@ -30,7 +30,7 @@ namespace {
 static constexpr char kDefaultNormalizerName[] = "nmt_nfkc";
 }  // namespace
 
- #ifndef __EMSCRIPTEN__
+#ifndef COMPILE_DECODER_ONLY
 // static
 util::Status SentencePieceTrainer::Train(const TrainerSpec &trainer_spec) {
   NormalizerSpec normalizer_spec;
@@ -182,7 +182,7 @@ util::Status SentencePieceTrainer::MergeSpecsFromArgs(
   return util::OkStatus();
 }
 
- #ifndef __EMSCRIPTEN__
+#ifndef COMPILE_DECODER_ONLY
 // static
 util::Status SentencePieceTrainer::Train(util::min_string_view args) {
   LOG(INFO) << "Running command: " << args.data();
