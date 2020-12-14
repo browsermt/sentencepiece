@@ -15,8 +15,13 @@
 #define DARTS_INT_TO_STR(value) #value
 #define DARTS_LINE_TO_STR(line) DARTS_INT_TO_STR(line)
 #define DARTS_LINE_STR DARTS_LINE_TO_STR(__LINE__)
+
+#if WITHOUT_EXCEPTIONS
+  #define DARTS_THROW(msg) {fprintf(stderr, msg); std::abort();}
+#else
 #define DARTS_THROW(msg) throw Darts::Details::Exception( \
   __FILE__ ":" DARTS_LINE_STR ": exception: " msg)
+#endif
 
 namespace Darts {
 
@@ -79,6 +84,7 @@ class DoubleArrayUnit {
   // Copyable.
 };
 
+#if !WITHOUT_EXCEPTIONS
 // Darts-clone throws an <Exception> for memory allocation failure, invalid
 // arguments or a too large offset. The last case means that there are too many
 // keys in the given set of keys. Note that the `msg' of <Exception> must be a
@@ -101,6 +107,7 @@ class Exception : public std::exception {
   // Disallows operator=.
   Exception &operator=(const Exception &);
 };
+#endif
 
 }  // namespace Details
 
@@ -376,6 +383,12 @@ int DoubleArrayImpl<A, B, T, C>::open(const char *file_name,
   }
 
   unit_type *buf;
+  #if WITHOUT_EXCEPTIONS
+    buf = new unit_type[size];
+    for (id_type i = 0; i < 256; ++i) {
+      buf[i] = units[i];
+    }
+  #else
   try {
     buf = new unit_type[size];
     for (id_type i = 0; i < 256; ++i) {
@@ -385,6 +398,7 @@ int DoubleArrayImpl<A, B, T, C>::open(const char *file_name,
     std::fclose(file);
     DARTS_THROW("failed to open double-array: std::bad_alloc");
   }
+  #endif // WITHOUT_EXCEPTIONS
 
   if (size > 256) {
     if (std::fread(buf + 256, unit_size(), size - 256, file) != size - 256) {
@@ -697,11 +711,15 @@ void AutoPool<T>::resize_buf(std::size_t size) {
   }
 
   AutoArray<char> buf;
+  #if WITHOUT_EXCEPTIONS
+    buf.reset(new char[sizeof(T) * capacity]);
+  #else
   try {
     buf.reset(new char[sizeof(T) * capacity]);
   } catch (const std::bad_alloc &) {
     DARTS_THROW("failed to resize pool: std::bad_alloc");
   }
+#endif
 
   if (size_ > 0) {
     T *src = reinterpret_cast<T *>(&buf_[0]);
@@ -836,11 +854,15 @@ class BitVector {
 };
 
 inline void BitVector::build() {
+#if WITHOUT_EXCEPTIONS
+  ranks_.reset(new id_type[units_.size()]);
+#else
   try {
     ranks_.reset(new id_type[units_.size()]);
   } catch (const std::bad_alloc &) {
     DARTS_THROW("failed to build rank index: std::bad_alloc");
   }
+#endif
 
   num_ones_ = 0;
   for (std::size_t i = 0; i < units_.size(); ++i) {
