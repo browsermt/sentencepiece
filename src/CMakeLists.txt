@@ -155,9 +155,13 @@ set(SPM_TEST_SRCS
   word_model_trainer_test.cc
   pretokenizer_for_training_test.cc)
 
-find_package(Threads REQUIRED)
+if(COMPILE_WITH_PTHREADS)
+  find_package(Threads REQUIRED)
 
-set(SPM_LIBS ${PROTOBUF_LITE_LIBRARY} Threads::Threads)
+  set(SPM_LIBS ${PROTOBUF_LITE_LIBRARY} Threads::Threads)
+else()
+  set(SPM_LIBS ${PROTOBUF_LITE_LIBRARY})
+endif()
 
 if (SPM_ENABLE_NFKC_COMPILE)
   find_package(ICU 4.4 COMPONENTS i18n data uc REQUIRED)
