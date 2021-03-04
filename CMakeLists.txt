@@ -28,6 +28,8 @@ option(SPM_NO_THREADLOCAL "Disable thread_local operator" OFF)
 option(SPM_USE_BUILTIN_PROTOBUF "Use built-in protobuf" ON)
 option(SPM_USE_EXTERNAL_ABSL "Use external protobuf" OFF)
 
+option(SPM_BUILD_LIBRARY_ONLY "Build library only (skip building executables)" OFF)
+
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 

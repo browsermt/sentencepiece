@@ -265,25 +265,29 @@ if (NOT MSVC)
   endif()
 endif()
 
-add_executable(spm_encode spm_encode_main.cc)
-add_executable(spm_decode spm_decode_main.cc)
-add_executable(spm_normalize spm_normalize_main.cc)
-add_executable(spm_train spm_train_main.cc)
-add_executable(spm_export_vocab spm_export_vocab_main.cc)
+if (NOT SPM_BUILD_LIBRARY_ONLY)
+  add_executable(spm_encode spm_encode_main.cc)
+  add_executable(spm_decode spm_decode_main.cc)
+  add_executable(spm_normalize spm_normalize_main.cc)
+  add_executable(spm_train spm_train_main.cc)
+  add_executable(spm_export_vocab spm_export_vocab_main.cc)
 
-target_link_libraries(spm_encode sentencepiece)
-target_link_libraries(spm_decode sentencepiece)
-target_link_libraries(spm_normalize sentencepiece sentencepiece_train)
-target_link_libraries(spm_train sentencepiece sentencepiece_train)
-target_link_libraries(spm_export_vocab sentencepiece)
+  target_link_libraries(spm_encode sentencepiece)
+  target_link_libraries(spm_decode sentencepiece)
+  target_link_libraries(spm_normalize sentencepiece sentencepiece_train)
+  target_link_libraries(spm_train sentencepiece sentencepiece_train)
+  target_link_libraries(spm_export_vocab sentencepiece)
+endif()
 
 if (SPM_ENABLE_NFKC_COMPILE)
   add_executable(compile_charsmap compile_charsmap_main.cc)
   target_link_libraries(compile_charsmap sentencepiece sentencepiece_train)
 endif()
 
-list(APPEND SPM_INSTALLTARGETS
-  spm_encode spm_decode spm_normalize spm_train spm_export_vocab)
+if (NOT SPM_BUILD_LIBRARY_ONLY)
+  list(APPEND SPM_INSTALLTARGETS
+    spm_encode spm_decode spm_normalize spm_train spm_export_vocab)
+endif()
 
 install(TARGETS ${SPM_INSTALLTARGETS}
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
