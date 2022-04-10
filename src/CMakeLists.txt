@@ -159,6 +159,16 @@ find_package(Threads REQUIRED)
 
 set(SPM_LIBS ${PROTOBUF_LITE_LIBRARY} Threads::Threads)
 
+if(ANDROID)
+  # SentencePiece throws compilation errors when attempted to compile for ARM
+  # via android ndk, about missing libraries of android and log. Solution
+  # adapted from OpenCV.
+  # - https://github.com/opencv/opencv/issues/17282
+  # - https://github.com/opencv/opencv/pull/19049
+  set(SPM_LIBS ${SPM_LIBS} android log)
+endif(ANDROID)
+
+
 if (SPM_ENABLE_NFKC_COMPILE)
   find_package(ICU 4.4 COMPONENTS i18n data uc REQUIRED)
   include_directories(${ICU_INCLUDE_DIRS})
