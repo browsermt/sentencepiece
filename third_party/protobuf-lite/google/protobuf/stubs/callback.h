@@ -125,7 +125,7 @@ class LIBPROTOBUF_EXPORT FunctionClosure0 : public Closure {
     : function_(function), self_deleting_(self_deleting) {}
   ~FunctionClosure0();
 
-  void Run() {
+  void Run() override {
     bool needs_delete = self_deleting_;  // read in case callback deletes
     function_();
     if (needs_delete) delete this;
@@ -145,7 +145,7 @@ class MethodClosure0 : public Closure {
     : object_(object), method_(method), self_deleting_(self_deleting) {}
   ~MethodClosure0() {}
 
-  void Run() {
+  void Run() override {
     bool needs_delete = self_deleting_;  // read in case callback deletes
     (object_->*method_)();
     if (needs_delete) delete this;
@@ -168,7 +168,7 @@ class FunctionClosure1 : public Closure {
       arg1_(arg1) {}
   ~FunctionClosure1() {}
 
-  void Run() {
+  void Run() override {
     bool needs_delete = self_deleting_;  // read in case callback deletes
     function_(arg1_);
     if (needs_delete) delete this;
@@ -191,7 +191,7 @@ class MethodClosure1 : public Closure {
       arg1_(arg1) {}
   ~MethodClosure1() {}
 
-  void Run() {
+  void Run() override {
     bool needs_delete = self_deleting_;  // read in case callback deletes
     (object_->*method_)(arg1_);
     if (needs_delete) delete this;
@@ -215,7 +215,7 @@ class FunctionClosure2 : public Closure {
       arg1_(arg1), arg2_(arg2) {}
   ~FunctionClosure2() {}
 
-  void Run() {
+  void Run() override {
     bool needs_delete = self_deleting_;  // read in case callback deletes
     function_(arg1_, arg2_);
     if (needs_delete) delete this;
@@ -239,7 +239,7 @@ class MethodClosure2 : public Closure {
       arg1_(arg1), arg2_(arg2) {}
   ~MethodClosure2() {}
 
-  void Run() {
+  void Run() override {
     bool needs_delete = self_deleting_;  // read in case callback deletes
     (object_->*method_)(arg1_, arg2_);
     if (needs_delete) delete this;
@@ -262,7 +262,7 @@ class FunctionResultCallback_0_0 : public ResultCallback<R> {
       : function_(function), self_deleting_(self_deleting) {}
   ~FunctionResultCallback_0_0() {}
 
-  R Run() {
+  R Run() override {
     bool needs_delete = self_deleting_;  // read in case callback deletes
     R result = function_();
     if (needs_delete) delete this;
@@ -284,7 +284,7 @@ class FunctionResultCallback_1_0 : public ResultCallback<R> {
       : function_(function), self_deleting_(self_deleting), p1_(p1) {}
   ~FunctionResultCallback_1_0() {}
 
-  R Run() {
+  R Run() override {
     bool needs_delete = self_deleting_;  // read in case callback deletes
     R result = function_(p1_);
     if (needs_delete) delete this;
@@ -357,7 +357,7 @@ class MethodResultCallback_0_0 : public ResultCallback<R> {
         self_deleting_(self_deleting) {}
   ~MethodResultCallback_0_0() {}
 
-  R Run() {
+  R Run() override {
     bool needs_delete = self_deleting_;
     R result = (object_->*method_)();
     if (needs_delete) delete this;
